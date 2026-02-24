@@ -1,0 +1,679 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Derivatives &mdash; an intuitive guide</title>
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
+  <script is:inline src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script is:inline src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <script is:inline src="https://www.desmos.com/api/v1.8/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script>
+  <script is:inline src="/main.js"></script>
+</head>
+<body>
+
+<header>
+  <h1>Derivatives</h1>
+  <p>The speedometer of mathematics.</p>
+</header>
+
+<h2>1. What's a derivative?</h2>
+
+<p>
+  Think about driving a car. Your GPS tracks your position over time.
+  But your <em>speedometer</em> shows something different &mdash; not where you are,
+  but <strong>how fast your position is changing right now</strong>.
+</p>
+
+<p>
+  That's a derivative. Given any curve, the derivative tells you its slope at any point &mdash;
+  how steeply it's rising or falling at that exact moment.
+</p>
+
+<h2>2. How do you actually find it?</h2>
+
+<p>
+  Here's the trick. Pick a point on a curve. Draw a line through it and a nearby point &mdash;
+  that's called a <strong>secant line</strong>, and its slope is just rise over run.
+</p>
+
+<p>
+  Now slide that second point closer and closer to the first.
+  The secant line tilts and settles into one final position: the <strong>tangent line</strong>.
+  That's the line that just grazes the curve at your point, and its slope <em>is</em> the derivative.
+</p>
+
+<div class="limit-demo">
+  <p style="font-family: system-ui, sans-serif; font-size: 0.9rem; color: #8892a4; margin-bottom: 0.8rem;">
+    The orange line connects two points. As they get closer, it becomes the purple tangent line.
+  </p>
+  <button class="animate-btn" id="animBtn">&#9654; Animate</button>
+  <canvas id="secantCanvas" width="640" height="260"></canvas>
+</div>
+<div
+  class="viz-qa viz-qa-standalone"
+  data-viz-id="secant-to-tangent"
+  data-viz-title="Secant to Tangent Animation"
+  data-viz-desc="The orange secant line between two points on the curve approaches the purple tangent line as h shrinks to zero."
+></div>
+
+<p>
+  Mathematically, we write this "sliding closer" process as a limit. If we call the gap between
+  the two points <em>h</em>, then as h shrinks to zero:
+</p>
+
+<div class="math-block">
+  <span class="math-display" data-tex="f'(x) = \\lim_{h \\to 0} \\frac{f(x+h) - f(x)}{h}"></span>
+  <p style="font-family: system-ui, sans-serif; font-size: 0.82rem; color: #8892a4; margin: 1rem 0 0.5rem;">Every symbol, explained:</p>
+  <table class="sym-table">
+    <tr>
+      <td><span class="math-inline" data-tex="f"></span></td>
+      <td>the name of your function &mdash; just a label, like calling it "the curve"</td>
+    </tr>
+    <tr>
+      <td><span class="math-inline" data-tex="x"></span></td>
+      <td>the input &mdash; a position on the horizontal axis</td>
+    </tr>
+    <tr>
+      <td><span class="math-inline" data-tex="f(x)"></span></td>
+      <td>read "f of x" &mdash; the output (height) of the function at position x</td>
+    </tr>
+    <tr>
+      <td><span class="math-inline" data-tex="f'(x)"></span></td>
+      <td>read "f prime of x" &mdash; the derivative, what we're solving for. The tick mark means "derivative of"</td>
+    </tr>
+    <tr>
+      <td><span class="math-inline" data-tex="="></span></td>
+      <td>equals &mdash; the derivative is defined as everything on the right side</td>
+    </tr>
+    <tr>
+      <td><span class="math-inline" data-tex="\\lim"></span></td>
+      <td>short for "limit" &mdash; the value an expression settles toward as something changes</td>
+    </tr>
+    <tr>
+      <td><span class="math-inline" data-tex="\\to"></span></td>
+      <td>read "approaches" &mdash; gets closer and closer to, without necessarily reaching it</td>
+    </tr>
+    <tr>
+      <td><span class="math-inline" data-tex="h \\to 0"></span></td>
+      <td>h approaches zero &mdash; the gap between the two points gets infinitely small</td>
+    </tr>
+    <tr>
+      <td><span class="math-inline" data-tex="h"></span></td>
+      <td>the horizontal gap between two nearby points on the curve</td>
+    </tr>
+    <tr>
+      <td><span class="math-inline" data-tex="f(x+h)"></span></td>
+      <td>the height of the curve at a point h units to the right of x</td>
+    </tr>
+    <tr>
+      <td><span class="math-inline" data-tex="f(x+h) - f(x)"></span></td>
+      <td>the vertical change between the two points (the rise)</td>
+    </tr>
+    <tr>
+      <td><span class="math-inline" data-tex="\\dfrac{\\text{top}}{\\text{bottom}}"></span></td>
+      <td>a fraction bar &mdash; means <em>divided by</em>. Top &divide; bottom. So <span class="math-inline" data-tex="\\frac{f(x+h)-f(x)}{h}"></span> means <span class="math-inline" data-tex="(f(x+h)-f(x)) \\div h"></span></td>
+    </tr>
+    <tr>
+      <td><span class="math-inline" data-tex="h"></span> (bottom)</td>
+      <td>the horizontal distance between the two points (the run) &mdash; rise &divide; run = slope</td>
+    </tr>
+  </table>
+</div>
+
+<div class="callout orange">
+  Don't let the notation scare you. It's just: <em>(change in y) / (change in x)</em>, with the gap made infinitely small.
+</div>
+
+<h2>3. See it for yourself</h2>
+
+<p>
+  Move the slider to place a point anywhere on the curve.
+  The highlighted tangent line shows the derivative at that spot.
+  <span style="color:#f97316">Orange</span> means positive slope and <span style="color:#60a5fa">blue</span> means negative.
+  Try moving to a peak, a valley, or where the curve is steepest.
+</p>
+
+<div class="graph-section">
+  <div class="graph-controls">
+    <div class="control-row">
+      <label>Function</label>
+      <div class="func-buttons">
+        <button class="func-btn active" data-fn="x^2">x&sup2;</button>
+        <button class="func-btn" data-fn="x^3">x&sup3;</button>
+        <button class="func-btn" data-fn="\\sin(x)">sin(x)</button>
+        <button class="func-btn" data-fn="e^x">e^x</button>
+        <button class="func-btn" data-fn="\\ln(x)">ln(x)</button>
+      </div>
+    </div>
+    <div class="control-row">
+      <label>Point x = <span class="val" id="xVal">1.0</span></label>
+      <input type="range" id="xSlider" min="-4" max="4" step="0.1" value="1" />
+    </div>
+    <div class="slope-display">
+      <div class="slope-badge">Slope (derivative): <span id="slopeVal">&mdash;</span></div>
+      <div class="slope-badge">f(x) = <span id="fxVal">&mdash;</span></div>
+    </div>
+  </div>
+  <div id="desmos-container"></div>
+</div>
+<div
+  class="viz-qa viz-qa-standalone"
+  data-viz-id="tangent-explorer"
+  data-viz-title="Interactive Tangent Explorer"
+  data-viz-desc="You choose a function and x-value, and the graph shows the tangent line and derivative at that exact point."
+></div>
+
+<div class="callout">
+  <strong>Flat curve?</strong> Slope is 0 &mdash; the function isn't changing.<br/>
+  <strong>Going up?</strong> Positive derivative. <strong>Going down?</strong> Negative.<br/>
+  <strong>At a peak or valley?</strong> The derivative is exactly 0 there.
+</div>
+
+<h2>4. Shortcuts (you rarely need the limit)</h2>
+
+<p>
+  The limit is the <em>definition</em>, but computing it every time would be tedious.
+  Mathematicians worked out a handful of rules that cover almost everything you'll encounter:
+</p>
+
+<div class="rules-grid">
+  <div class="rule-card">
+    <div class="rule-name">Power Rule &mdash; x to a power</div>
+    <span class="math-display" data-tex="\\frac{d}{dx} x^n = nx^{n-1}"></span>
+    <div class="sym-list">
+      <span class="sym">d/dx</span> &mdash; "take the derivative of." Written as a fraction: a tiny change in output over a tiny change in x.<br/>
+      <span class="sym">n</span> &mdash; any fixed number (the exponent)<br/>
+      <span class="sym">nx<sup>n-1</sup></span> &mdash; multiply by n, drop the exponent by 1
+    </div>
+  </div>
+  <div class="rule-card">
+    <div class="rule-name">Constants don't change</div>
+    <span class="math-display" data-tex="\\frac{d}{dx} c = 0"></span>
+    <div class="sym-list">
+      <span class="sym">c</span> &mdash; any fixed number, like 5 or &pi;<br/>
+      <span class="sym">0</span> &mdash; a constant never changes, so its rate of change is zero
+    </div>
+  </div>
+  <div class="rule-card">
+    <div class="rule-name">Sum Rule &mdash; split it up</div>
+    <span class="math-display" data-tex="(f + g)' = f' + g'"></span>
+    <div class="sym-list">
+      <span class="sym">f, g</span> &mdash; any two functions<br/>
+      <span class="sym">'</span> &mdash; "prime" shorthand for "derivative of"<br/>
+      just differentiate each piece separately
+    </div>
+  </div>
+  <div class="rule-card">
+    <div class="rule-name">Product Rule &mdash; two things multiplied</div>
+    <span class="math-display" data-tex="(fg)' = f'g + fg'"></span>
+    <div class="sym-list">
+      <span class="sym">fg</span> &mdash; two functions multiplied<br/>
+      <span class="sym">f'g</span> &mdash; derivative of f, times g as-is<br/>
+      <span class="sym">fg'</span> &mdash; f as-is, times derivative of g<br/>
+      add those two together
+    </div>
+  </div>
+  <div class="rule-card">
+    <div class="rule-name">Chain Rule &mdash; function inside a function</div>
+    <span class="math-display" data-tex="\\frac{d}{dx} f(g(x)) = f'(g(x)) \\cdot g'(x)"></span>
+    <div class="sym-list">
+      <span class="sym">g(x)</span> &mdash; the inner function<br/>
+      <span class="sym">f(g(x))</span> &mdash; outer function wrapping g<br/>
+      <span class="sym">f'(g(x))</span> &mdash; derivative of the outer<br/>
+      <span class="sym">g'(x)</span> &mdash; derivative of the inner<br/>
+      multiply them together
+    </div>
+  </div>
+  <div class="rule-card">
+    <div class="rule-name">e^x is its own derivative</div>
+    <span class="math-display" data-tex="\\frac{d}{dx} e^x = e^x"></span>
+    <div class="sym-list">
+      <span class="sym">e</span> &mdash; Euler's number &asymp; 2.718, a special mathematical constant<br/>
+      <span class="sym">e^x</span> &mdash; the result equals the original &mdash; completely unique!
+    </div>
+  </div>
+</div>
+
+<div class="callout green">
+  <strong>Quick example:</strong> Take <span class="math-inline" data-tex="f(x) = x^3 - 2x^2 + 5"></span>.
+  Apply the power rule to each term:<br/><br/>
+  <span class="math-inline" data-tex="f'(x) = 3x^2 - 4x"></span><br/><br/>
+  At <span class="math-inline" data-tex="x = 2"></span>, that's
+  <span class="math-inline" data-tex="3(4) - 4(2) = 4"></span> &mdash;
+  the curve is rising with slope 4 at that point.
+</div>
+
+<h2>5. Why does any of this matter?</h2>
+
+<p>
+  Derivatives show up everywhere something is changing:
+</p>
+
+<ul style="margin: 0 0 1rem 1.5rem; line-height: 2.2;">
+  <li><strong>Physics:</strong> velocity is the derivative of position; acceleration is the derivative of velocity.</li>
+  <li><strong>Machine learning:</strong> training a neural network means following derivatives downhill to minimize error.</li>
+  <li><strong>Engineering:</strong> finding the peak efficiency of an engine means finding where the derivative is zero.</li>
+</ul>
+
+<p>
+  Whenever you need to find the <em>best</em> value of something, or understand how fast something is changing,
+  you reach for a derivative.
+</p>
+
+<section class="guide">
+  <p class="guide-intro">A different kind of explanation</p>
+
+  <div class="guide-step">
+    <div class="guide-step-num">1</div>
+    <div class="guide-step-body">
+      <h3>Zoom in on anything smooth</h3>
+      <p>
+        Take a hill. From far away it's curved &mdash; rolling, organic, complicated.
+        Now walk up close. The ground in front of your feet looks flat.
+        Walk closer still &mdash; just staring at a tiny patch of dirt. Completely flat.
+      </p>
+      <p>
+        This is not an illusion. Any smooth curve, when you zoom in far enough, <em>becomes</em> a straight line.
+        This is one of the most profound things in all of mathematics, and you can verify it yourself
+        right now by zooming into the interactive graph above.
+      </p>
+      <div class="guide-pull">
+        The derivative is what any smooth curve turns into when you zoom in close enough.
+      </div>
+      <p>
+        And a straight line has exactly one thing worth knowing about it: its <strong>slope</strong>.
+        How steeply it rises or falls. That slope &mdash; that single number &mdash; is the derivative at that point.
+      </p>
+    </div>
+  </div>
+
+  <div class="guide-step">
+    <div class="guide-step-num">2</div>
+    <div class="guide-step-body">
+      <h3>Every point gets its own number</h3>
+      <p>
+        Move to a different spot on the curve. Zoom in there. You get a different line, a different slope,
+        a different number.
+      </p>
+      <p>
+        So the derivative isn't <em>a</em> number. It's a whole function &mdash; one number for every
+        point on the original curve. You feed it an x, it tells you the slope there.
+        That's why we write <span class="math-inline" data-tex="f'(x)"></span> and not just <span class="math-inline" data-tex="f'"></span>.
+        The x is asking: <em>"the slope at this specific x, please."</em>
+      </p>
+      <p>
+        Try it in the graph above. Drag the slider left and right. Watch the slope number change.
+        That changing number is the derivative function, live.
+      </p>
+    </div>
+  </div>
+
+  <div class="guide-step">
+    <div class="guide-step-num">3</div>
+    <div class="guide-step-body">
+      <h3>You have felt this your entire life</h3>
+      <p>
+        You know the difference between going 60 mph and <em>accelerating</em> to 60 mph.
+        One is a position-over-time situation. The other is a <em>how fast is the speed itself changing</em> situation.
+        That second one is a derivative.
+      </p>
+      <p>
+        When a car floors it and you get pressed into your seat &mdash; that pressure is your body
+        detecting the derivative of velocity. You are a derivative sensor. You have been your whole life.
+      </p>
+      <div class="guide-examples">
+        <div class="guide-example">
+          <span class="ex-label">Your position</span>
+          <span class="ex-meaning">the original function</span>
+        </div>
+        <div class="guide-example">
+          <span class="ex-label">Your speed</span>
+          <span class="ex-meaning">the derivative of position</span>
+        </div>
+        <div class="guide-example">
+          <span class="ex-label">Your acceleration</span>
+          <span class="ex-meaning">the derivative of speed (derivative of a derivative)</span>
+        </div>
+        <div class="guide-example">
+          <span class="ex-label">That jolt feeling</span>
+          <span class="ex-meaning">the derivative of acceleration. Yes, it goes further.</span>
+        </div>
+      </div>
+      <p>
+        Physics runs on derivatives, all the way down. Every force, every motion, every field &mdash;
+        all relationships between quantities and their rates of change.
+      </p>
+    </div>
+  </div>
+
+  <div class="guide-step">
+    <div class="guide-step-num">4</div>
+    <div class="guide-step-body">
+      <h3>The sign tells you the direction</h3>
+      <p>
+        The derivative is a number. That number can be positive, negative, or zero.
+        And those three cases tell you everything about which way the curve is heading.
+      </p>
+      <p>
+        Think of it like this. You're standing on a hillside and you take one step forward.
+        Are you going uphill, downhill, or on flat ground?
+      </p>
+      <div class="guide-examples">
+        <div class="guide-example">
+          <span class="ex-label">Derivative &gt; 0</span>
+          <span class="ex-meaning">the function is climbing &mdash; one step right means higher up</span>
+        </div>
+        <div class="guide-example">
+          <span class="ex-label">Derivative &lt; 0</span>
+          <span class="ex-meaning">the function is falling &mdash; one step right means lower down</span>
+        </div>
+        <div class="guide-example">
+          <span class="ex-label">Derivative = 0</span>
+          <span class="ex-meaning">perfectly flat right here &mdash; neither up nor down, not even a little</span>
+        </div>
+      </div>
+      <p>
+        That's it. Positive means going up. Negative means going down. Zero means flat.
+        The sign of the derivative <em>is</em> the direction of change. Every time, no exceptions.
+      </p>
+    </div>
+  </div>
+
+  <div class="guide-step">
+    <div class="guide-step-num">5</div>
+    <div class="guide-step-body">
+      <h3>The size tells you how committed it is</h3>
+      <p>
+        The sign tells you direction. The <em>size</em> of the number tells you intensity.
+      </p>
+      <p>
+        A derivative of 0.01 means: yes, technically going up, but barely &mdash; almost flat,
+        creeping forward. A derivative of 50 means: going up aggressively, nearly vertical.
+        Both positive. Very different feelings.
+      </p>
+      <div class="guide-pull">
+        A big derivative means fast change. A small derivative means slow change. Zero means no change at all.
+      </div>
+      <p>
+        This is why the speedometer analogy is so good. The <em>direction</em> the needle points is the sign &mdash;
+        forward or backward. The <em>number on the gauge</em> is the magnitude. Both together give you the full picture
+        of what change is doing at this moment.
+      </p>
+      <p>
+        Look at <span class="math-inline" data-tex="x^2"></span> in the graph above. Near zero, the slope is tiny
+        &mdash; the curve is almost flat. Move further out and the slope grows. Same direction (upward),
+        but increasingly committed to it.
+      </p>
+    </div>
+  </div>
+
+  <div class="guide-step">
+    <div class="guide-step-num">6</div>
+    <div class="guide-step-body">
+      <h3>Zero is where things get interesting</h3>
+      <p>
+        When the derivative is zero, the function has gone flat for a moment. And that moment is special,
+        because flat is the only way to switch from going up to going down.
+      </p>
+      <p>
+        Imagine a ball thrown into the air. It rises. Then it falls. But to go from rising to falling,
+        it has to pass through a single instant where it's doing <em>neither</em>. That instant &mdash;
+        the peak &mdash; is where the derivative of its height is exactly zero.
+      </p>
+      <div class="guide-pull">
+        Every mountain peak, every valley floor, every turnaround point &mdash; the derivative is zero there.
+      </div>
+      <p>
+        This is one of the most powerful things in all of applied mathematics: to find where
+        something is maximum or minimum, find where its derivative equals zero. That's how engineers
+        find peak efficiency, how economists find optimal prices, how your GPS finds the shortest route.
+        All of them are hunting for zeros of derivatives.
+      </p>
+    </div>
+  </div>
+
+  <div class="guide-step">
+    <div class="guide-step-num">7</div>
+    <div class="guide-step-body">
+      <h3>Direction of change has direction of change</h3>
+      <p>
+        Here's a thought that might bend your brain a little.
+      </p>
+      <p>
+        The derivative tells you which direction something is changing. But that direction of change
+        is itself changing. It can change slowly or quickly, start to reverse, speed up.
+        So you can take the derivative of the derivative.
+      </p>
+      <p>
+        This is called the <strong>second derivative</strong>, and it tells you not where something is,
+        not how fast it's changing, but <em>how fast the rate of change is changing</em>.
+        Whether the change is accelerating or slowing down.
+      </p>
+      <div class="guide-examples">
+        <div class="guide-example">
+          <span class="ex-label">Position</span>
+          <span class="ex-meaning">where you are</span>
+        </div>
+        <div class="guide-example">
+          <span class="ex-label">Velocity</span>
+          <span class="ex-meaning">how fast position is changing (1st derivative)</span>
+        </div>
+        <div class="guide-example">
+          <span class="ex-label">Acceleration</span>
+          <span class="ex-meaning">how fast velocity is changing (2nd derivative)</span>
+        </div>
+        <div class="guide-example">
+          <span class="ex-label">Jerk</span>
+          <span class="ex-meaning">how fast acceleration is changing (3rd derivative) &mdash; yes, this is the real name</span>
+        </div>
+      </div>
+      <p>
+        "Jerk" is what you feel when a car's acceleration suddenly changes &mdash; that lurch.
+        Engineers who design smooth elevators and trains are literally minimizing jerk.
+        Derivatives go as deep as you need them to.
+      </p>
+    </div>
+  </div>
+
+  <div class="guide-step">
+    <div class="guide-step-num">8</div>
+    <div class="guide-step-body">
+      <h3>Following the slope downhill</h3>
+      <p>
+        Here's how you train almost every AI model that exists today.
+      </p>
+      <p>
+        Imagine you're blindfolded on a hilly landscape, trying to find the lowest valley.
+        You can't see anything, but you can feel the ground beneath your feet.
+        Which way is it sloping? Step that way. Check again. Step that way again.
+        Repeat until the ground feels flat.
+      </p>
+      <p>
+        That's gradient descent &mdash; the algorithm behind neural networks. The "landscape" is a
+        function describing how wrong the model is. The derivative tells you which direction is downhill
+        (toward less wrong). Take a small step. Repeat millions of times.
+      </p>
+      <div class="guide-pull">
+        The derivative doesn't just describe change. It tells you which way to move to make things better.
+      </div>
+      <p>
+        Every time you use a language model, a recommendation system, an image classifier &mdash;
+        it exists because someone followed derivatives downhill, millions of steps, until the error hit a valley.
+        The derivative of a loss function is the compass. Direction of change, put to work.
+      </p>
+    </div>
+  </div>
+
+  <div class="guide-step">
+    <div class="guide-step-num">9</div>
+    <div class="guide-step-body">
+      <h3>The world is lousy with them</h3>
+      <p>
+        Once you know what a derivative is, you start seeing them everywhere.
+        They hide behind words like <em>rate</em>, <em>speed</em>, <em>growth</em>, <em>decline</em>,
+        <em>sensitivity</em>, <em>trend</em>.
+      </p>
+      <div class="guide-examples">
+        <div class="guide-example">
+          <span class="ex-label">Temperature falling</span>
+          <span class="ex-meaning">derivative of temperature with respect to time</span>
+        </div>
+        <div class="guide-example">
+          <span class="ex-label">Stock rising steeply</span>
+          <span class="ex-meaning">large positive derivative of price</span>
+        </div>
+        <div class="guide-example">
+          <span class="ex-label">Ball at its peak</span>
+          <span class="ex-meaning">derivative of height = 0 (momentarily not going up or down)</span>
+        </div>
+        <div class="guide-example">
+          <span class="ex-label">Heart rate spiking</span>
+          <span class="ex-meaning">large derivative of beats-per-minute</span>
+        </div>
+        <div class="guide-example">
+          <span class="ex-label">A neural net training</span>
+          <span class="ex-meaning">following derivatives of error downhill, step by step</span>
+        </div>
+      </div>
+      <p>
+        If something can change &mdash; and everything can &mdash; then its derivative exists and
+        is worth knowing.
+      </p>
+    </div>
+  </div>
+
+  <div class="guide-step">
+    <div class="guide-step-num">10</div>
+    <div class="guide-step-body">
+      <h3>It only cares about right now</h3>
+      <p>
+        Here's the strangest and most beautiful thing about a derivative.
+      </p>
+      <p>
+        It doesn't care where the curve has been. It doesn't care where it's going.
+        It only knows one instant &mdash; the one you're looking at &mdash; and it asks:
+        <em>at this exact moment, which direction is this heading, and how fast?</em>
+      </p>
+      <p>
+        A photograph captures a position. A video captures positions over time.
+        The derivative captures something a camera can't: <strong>tendency</strong>. Momentum. The direction of now.
+      </p>
+      <div class="guide-pull">
+        The derivative is mathematics in the present tense.
+      </div>
+      <p>
+        Everything else in a function &mdash; its history, its future, its shape &mdash; is irrelevant.
+        The derivative collapses all of that into a single, present-tense number: <em>the slope right here.</em>
+      </p>
+    </div>
+  </div>
+
+  <div class="guide-reveal">
+    <p>So what is a derivative, really?</p>
+    <p class="big">The slope of a curve at a single point &mdash;<br/>the number that captures the direction of change, right now.</p>
+    <p style="margin-top: 1rem; font-size: 0.9rem; color: #9d8fcc;">
+      Everything else &mdash; the limit, the formula, the rules &mdash; is just machinery for computing that number.
+    </p>
+  </div>
+
+</section>
+
+<section class="visuals">
+  <h2>Interactive visualizations</h2>
+  <p style="color: var(--muted); font-family: system-ui, sans-serif; font-size: 0.95rem; margin-bottom: 2.5rem;">
+    Four different windows into the same idea.
+  </p>
+
+  <!-- Twin Curves -->
+  <div class="visual-card">
+    <div class="visual-header">
+      <div class="visual-title">Twin Curves</div>
+      <div class="visual-desc">Pick any point x and a nearby point x+h. The dashed secant line connects them. Shrink h toward zero and watch it settle into the tangent. Orange means positive secant slope, blue means negative. The slope at that moment <em>is</em> the derivative.</div>
+    </div>
+    <canvas id="twinCanvas" class="visual-canvas"></canvas>
+    <div class="visual-controls">
+      <div class="control-row">
+        <label>h = <span class="val" id="twinHVal">2.00</span></label>
+        <input type="range" id="twinHSlider" min="0.01" max="3" step="0.01" value="2" />
+      </div>
+      <div class="control-row">
+        <label>x = <span class="val" id="twinXVal">1.0</span></label>
+        <input type="range" id="twinXSlider" min="-3" max="3" step="0.1" value="1" />
+      </div>
+      <div class="visual-info" id="twinInfo"></div>
+    </div>
+    <div class="viz-qa" data-viz-id="twin-curves"></div>
+  </div>
+
+  <!-- Velocity Ghost -->
+  <div class="visual-card">
+    <div class="visual-header">
+      <div class="visual-title">Velocity Ghost</div>
+      <div class="visual-desc">A point travels along the curve, leaving ghost arrows at past positions. Each arrow points in the true tangent direction &mdash; length shows magnitude, color shows sign. Orange = rising, blue = falling.</div>
+    </div>
+    <canvas id="ghostCanvas" class="visual-canvas"></canvas>
+    <div class="visual-controls">
+      <div class="control-row">
+        <button class="animate-btn" id="ghostBtn">&#9654; Launch</button>
+        <button class="func-btn" id="ghostFnPow2" style="margin-left:0.5rem;">x&sup2;</button>
+        <button class="func-btn" id="ghostFnSin">sin x</button>
+        <button class="func-btn" id="ghostFnPow3">x&sup3;</button>
+      </div>
+    </div>
+    <div class="viz-qa" data-viz-id="velocity-ghost"></div>
+  </div>
+
+  <!-- Temperature Map -->
+  <div class="visual-card">
+    <div class="visual-header">
+      <div class="visual-title">Temperature Map</div>
+      <div class="visual-desc">The top curve is painted by its derivative. <span style="color:#f97316">Orange</span> = rising fast, <span style="color:#94a3b8">grey</span> = flat, <span style="color:#60a5fa">blue</span> = falling. Below it, f&prime;(x) itself, with color showing whether that derivative curve is rising or falling.</div>
+    </div>
+    <canvas id="tempCanvas" class="visual-canvas"></canvas>
+    <div class="visual-controls">
+      <div class="control-row">
+        <label>Function</label>
+        <button class="func-btn active" id="tempFnSin">sin x</button>
+        <button class="func-btn" id="tempFnPow2">x&sup2;</button>
+        <button class="func-btn" id="tempFnPow3">x&sup3;</button>
+        <button class="func-btn" id="tempFnExp">e^x</button>
+      </div>
+    </div>
+    <div class="viz-qa" data-viz-id="temperature-map"></div>
+  </div>
+
+  <!-- Music of Slope -->
+  <div class="visual-card">
+    <div class="visual-header">
+      <div class="visual-title">Music of Slope</div>
+      <div class="visual-desc">The derivative becomes sound. Move the point &mdash; the pitch rises when the slope rises, falls when it falls. Flat curve = silence at middle C.</div>
+    </div>
+    <canvas id="musicCanvas" class="visual-canvas" style="height:120px;"></canvas>
+    <div class="visual-controls">
+      <div class="control-row">
+        <label>x = <span class="val" id="musicXVal">0.0</span></label>
+        <input type="range" id="musicXSlider" min="-4" max="4" step="0.05" value="0" />
+      </div>
+      <div class="control-row">
+        <button class="animate-btn" id="musicBtn">&#9654; Play</button>
+        <button class="func-btn" id="musicFnSin" style="margin-left:0.5rem;">sin x</button>
+        <button class="func-btn" id="musicFnPow2">x&sup2;</button>
+        <button class="func-btn" id="musicFnPow3">x&sup3;</button>
+      </div>
+      <div class="visual-info" id="musicInfo"></div>
+    </div>
+    <div class="viz-qa" data-viz-id="music-of-slope"></div>
+  </div>
+
+</section>
+
+<footer>
+  Built with <a href="https://astro.build" style="color: #7c6af7;">Astro</a>,
+  <a href="https://katex.org" style="color: #7c6af7;">KaTeX</a>, and
+  <a href="https://www.desmos.com/api" style="color: #7c6af7;">Desmos</a>.
+</footer>
+
+</body>
+</html>
