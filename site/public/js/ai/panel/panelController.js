@@ -1,6 +1,7 @@
 import { createQaStore } from '../state/qaStore.js';
 import { askByProvider as askProvider } from '../providers/providerRouter.js';
 import { buildPrompts, collectRecentContext } from '../prompt/templates.js';
+import { extractFollowUpQuestions } from '../prompt/followupSuggestions.js';
 import { renderHistoryList } from '../render/historyList.js';
 import { createSelectionAnchorTools } from '../context/selectionAnchor.js';
 import { createBadgeCounts } from '../indicators/badgeCounts.js';
@@ -146,6 +147,14 @@ export function bootAiPanel(options) {
         renderHistory();
         panel.status.textContent = 'Deleted one saved Q&A.';
       },
+      onUseFollowUp: function(followUp) {
+        panel.input.value = followUp;
+        panel.input.dispatchEvent(new Event('input', { bubbles: true }));
+        panel.input.focus();
+        panel.input.setSelectionRange(panel.input.value.length, panel.input.value.length);
+        panel.status.textContent = 'Follow-up added. Edit it or press Ask.';
+      },
+      extractFollowUpQuestions: extractFollowUpQuestions,
       emptyDefaultText: 'Choose a section or highlight text to start.',
       emptyContextText: 'No saved Q&A for this context yet.'
     });
@@ -245,6 +254,7 @@ export function bootAiPanel(options) {
     normalizeText: normalizeText,
     buildPrompts: buildPrompts,
     askProvider: askProvider,
+    extractFollowUpQuestions: extractFollowUpQuestions,
     makeId: makeId,
     upsertContextMeta: upsertContextMeta,
     getContextMeta: getContextMeta,

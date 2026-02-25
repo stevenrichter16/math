@@ -62,6 +62,7 @@ export function attachAskFlow(options) {
         prompts: prompts,
         maxTokens: 700
       });
+      var followUps = opts.extractFollowUpQuestions(answer, question);
 
       opts.getContextHistory(aiState.activeContext.key).push({
         id: opts.makeId(),
@@ -69,6 +70,7 @@ export function attachAskFlow(options) {
         intentId: aiState.activeIntentId || '',
         question: question,
         answer: answer,
+        followUps: followUps,
         createdAt: new Date().toISOString()
       });
       opts.upsertContextMeta(aiState.activeContext);

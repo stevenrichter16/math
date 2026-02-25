@@ -669,6 +669,168 @@
 
 </section>
 
+<section class="frontier">
+  <h2>6. Partial derivatives: the freeze-frame mountain</h2>
+  <p class="frontier-intro">
+    You stand on a surface <span class="math-inline" data-tex="z=f(x,y)"></span> like a mountain at night.
+    You only get one flashlight beam at a time.
+    Flashlight east-west gives one slope. Flashlight north-south gives another.
+    With <span class="math-inline" data-tex="y"></span> frozen, your local steepness is
+    <span class="math-inline" data-tex="\\frac{\\partial f}{\\partial x}"></span>.
+    With <span class="math-inline" data-tex="x"></span> frozen, it is
+    <span class="math-inline" data-tex="\\frac{\\partial f}{\\partial y}"></span>.
+    Same point. Different questions. Different truths.
+  </p>
+  <p>
+    This is the core leap from single-variable calculus to multivariable calculus:
+    slope is no longer one number by default. It depends on which direction you allow motion.
+  </p>
+
+  <div class="visual-card">
+    <div class="visual-header">
+      <div class="visual-title">Freeze-Frame Mountain</div>
+      <div class="visual-desc">The purple surface is one function <span class="math-inline" data-tex="f(x,y)"></span>. Orange slice: move in x with y frozen. Blue slice: move in y with x frozen. Lock one direction and watch how the local slope changes.</div>
+    </div>
+    <canvas id="partialCanvas" class="visual-canvas" style="height:300px;"></canvas>
+    <div class="visual-controls">
+      <div class="control-row">
+        <label>x = <span class="val" id="partialXVal">0.0</span></label>
+        <input type="range" id="partialXSlider" min="-3" max="3" step="0.1" value="0" />
+      </div>
+      <div class="control-row">
+        <label>y = <span class="val" id="partialYVal">0.0</span></label>
+        <input type="range" id="partialYSlider" min="-3" max="3" step="0.1" value="0" />
+      </div>
+      <div class="control-row">
+        <label>Freeze direction</label>
+        <button class="func-btn active" id="partialModeY">Lock y (read <span class="math-inline" data-tex="\\partial f / \\partial x"></span>)</button>
+        <button class="func-btn" id="partialModeX">Lock x (read <span class="math-inline" data-tex="\\partial f / \\partial y"></span>)</button>
+      </div>
+      <div class="slope-display frontier-slope-display">
+        <div class="slope-badge"><span class="math-inline" data-tex="\\partial f/\\partial x"></span>: <span id="partialDxVal">&mdash;</span></div>
+        <div class="slope-badge"><span class="math-inline" data-tex="\\partial f/\\partial y"></span>: <span id="partialDyVal">&mdash;</span></div>
+        <div class="slope-badge"><span class="math-inline" data-tex="\\lVert\\nabla f\\rVert"></span>: <span id="partialGradVal">&mdash;</span></div>
+        <div class="slope-badge">steepest heading: <span id="partialDirVal">&mdash;</span></div>
+      </div>
+      <div class="visual-info" id="partialInfo"></div>
+    </div>
+    <div class="viz-qa" data-viz-id="freeze-frame-mountain"></div>
+  </div>
+
+  <h2>7. Integrals: the area ledger</h2>
+  <p class="frontier-intro">
+    Think of an integral as accounting, not coloring.
+    Every thin strip is a transaction:
+    <span class="math-inline" data-tex="\\Delta A \\approx f(x)\\Delta x"></span>.
+    Above the axis is a deposit. Below the axis is a withdrawal.
+    The final statement is <span class="math-inline" data-tex="\\int_a^b f(x)\\,dx"></span>.
+  </p>
+  <p>
+    This is why a dramatic graph can still net near zero: positive and negative territory can cancel almost perfectly.
+  </p>
+
+  <div class="visual-card">
+    <div class="visual-header">
+      <div class="visual-title">The Area Ledger</div>
+      <div class="visual-desc">Bars stream into a running balance. Orange bars add. Blue bars subtract. Compare left, midpoint, and right accounting rules while changing the range and number of slices.</div>
+    </div>
+    <canvas id="ledgerCanvas" class="visual-canvas" style="height:270px;"></canvas>
+    <div class="visual-controls">
+      <div class="control-row">
+        <label>Function</label>
+        <button class="func-btn active" id="ledgerFnWave">sin x + 0.25x</button>
+        <button class="func-btn" id="ledgerFnCubic">0.2x^3 - x</button>
+        <button class="func-btn" id="ledgerFnBump">e^(-x^2) - 0.35</button>
+      </div>
+      <div class="control-row">
+        <label>a = <span class="val" id="ledgerAVal">-2.5</span></label>
+        <input type="range" id="ledgerASlider" min="-3.5" max="2.0" step="0.1" value="-2.5" />
+      </div>
+      <div class="control-row">
+        <label>b = <span class="val" id="ledgerBVal">2.5</span></label>
+        <input type="range" id="ledgerBSlider" min="-2.0" max="3.5" step="0.1" value="2.5" />
+      </div>
+      <div class="control-row">
+        <label>Slices n = <span class="val" id="ledgerNVal">28</span></label>
+        <input type="range" id="ledgerNSlider" min="4" max="80" step="1" value="28" />
+      </div>
+      <div class="control-row">
+        <label>Rule</label>
+        <button class="func-btn" id="ledgerMethodLeft">Left</button>
+        <button class="func-btn active" id="ledgerMethodMid">Midpoint</button>
+        <button class="func-btn" id="ledgerMethodRight">Right</button>
+      </div>
+      <div class="ledger-balance">
+        <div class="slope-badge">Deposits: <span id="ledgerPosVal">0.000</span></div>
+        <div class="slope-badge">Withdrawals: <span id="ledgerNegVal">0.000</span></div>
+        <div class="slope-badge">Net: <span id="ledgerNetVal">0.000</span></div>
+        <div class="slope-badge">Reference: <span id="ledgerExactVal">0.000</span></div>
+        <div class="slope-badge">Error: <span id="ledgerErrVal">0.000</span></div>
+      </div>
+      <div class="visual-info" id="ledgerInfo"></div>
+    </div>
+    <div class="viz-qa" data-viz-id="area-ledger"></div>
+  </div>
+
+  <h2>8. Differential equations: local rule, global fate</h2>
+  <p class="frontier-intro">
+    A differential equation does not hand you the whole story first.
+    It gives a local law: <span class="math-inline" data-tex="\\frac{dy}{dx}=g(x,y)"></span>.
+    At each point, it whispers only the next tilt. Once you choose one initial condition,
+    a full trajectory unfolds.
+  </p>
+  <p>
+    In this field, arrows are local instructions.
+    One seed point turns those local instructions into a complete fate line.
+  </p>
+  <div class="ode-howto">
+    <div class="ode-howto-title">How to read this</div>
+    <div class="ode-howto-steps">
+      <span>1. Arrow angle shows the local derivative <span class="math-inline" data-tex="y'"></span>.</span>
+      <span>2. Tap the field to plant seed points (initial conditions).</span>
+      <span>3. Each seed grows into a full trajectory: local rule, global fate.</span>
+    </div>
+  </div>
+
+  <div class="visual-card">
+    <div class="visual-header">
+      <div class="visual-title">Local Rule, Global Fate</div>
+      <div class="visual-desc">Arrow field = local derivative rule. White curve = the unique solution through your chosen seed point. Tap anywhere on the field to set a new initial condition.</div>
+    </div>
+    <canvas id="odeCanvas" class="visual-canvas" style="height:290px;"></canvas>
+    <div class="visual-controls">
+      <div class="control-row">
+        <label>Equation</label>
+        <button class="func-btn active" id="odeEqGrowth">y' = y</button>
+        <button class="func-btn" id="odeEqLogistic">y' = 1.2y(1 - y/2)</button>
+        <button class="func-btn" id="odeEqDriven">y' = sin(x) - 0.6y</button>
+      </div>
+      <div class="control-row">
+        <label>Seeds: <span class="val" id="odeSeedCount">1</span></label>
+        <button class="func-btn" id="odeResetBtn">Reset default seed</button>
+        <button class="func-btn" id="odeClearBtn">Clear seeds</button>
+      </div>
+      <div class="control-row">
+        <label><span id="odeParamALabel">growth rate r</span> = <span class="val" id="odeParamAVal">1.00</span></label>
+        <input type="range" id="odeParamASlider" min="-2.0" max="2.0" step="0.05" value="1.0" />
+      </div>
+      <div class="control-row" id="odeParamBRow">
+        <label><span id="odeParamBLabel">carrying capacity K</span> = <span class="val" id="odeParamBVal">2.00</span></label>
+        <input type="range" id="odeParamBSlider" min="0.3" max="3.5" step="0.05" value="2.0" />
+      </div>
+      <div class="control-row">
+        <label>Active seed: x<sub>0</sub> = <span class="val" id="odeX0Val">-2.0</span>, y<sub>0</sub> = <span class="val" id="odeY0Val">0.8</span></label>
+      </div>
+      <div class="slope-display frontier-slope-display">
+        <div class="slope-badge">slope at seed: <span id="odeSlopeVal">&mdash;</span></div>
+        <div class="slope-badge">local behavior: <span id="odeTrendVal">&mdash;</span></div>
+      </div>
+      <div class="visual-info" id="odeInfo">Tap or click inside the field to pick a new initial condition.</div>
+    </div>
+    <div class="viz-qa" data-viz-id="local-rule-global-fate"></div>
+  </div>
+</section>
+
 <footer>
   Built with <a href="https://astro.build" style="color: #7c6af7;">Astro</a>,
   <a href="https://katex.org" style="color: #7c6af7;">KaTeX</a>, and

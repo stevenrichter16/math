@@ -18,6 +18,7 @@ export function buildPrompts(context, question, intentInstruction, recentContext
   var systemPrompt =
     'You are a precise calculus tutor. Be accurate, clear, and concise. ' +
     'Write all mathematical notation in LaTeX delimiters: inline \\(...\\) and display \\[...\\]. ' +
+    'Make the two items under \"Next questions\" specific and meaningfully harder than the user\'s question. ' +
     'Respond in plain text using exactly this structure:\n' +
     'Direct answer:\n' +
     'Why this applies here:\n' +

@@ -1,6 +1,7 @@
 import { createAppState } from './appState.js';
 import { bootDerivativeViz } from '../viz/derivative/derivativeViz.js';
 import { bootRulesViz } from '../viz/rules/rulesViz.js';
+import { bootAdvancedViz } from '../viz/advanced/advancedViz.js';
 import { bootAiPanel } from '../ai/panel/panelController.js';
 
 export function bootLegacyApp() {
@@ -8,14 +9,38 @@ export function bootLegacyApp() {
   var graphState = appState.graph;
   var aiState = appState.ai;
 
-  document.querySelectorAll('.math-inline').forEach(function(el) {
-    katex.render(el.dataset.tex, el, { throwOnError: false, displayMode: false });
-  });
-  document.querySelectorAll('.math-display').forEach(function(el) {
-    katex.render(el.dataset.tex, el, { throwOnError: false, displayMode: true });
-  });
+  try {
+    bootAiPanel({ aiState: aiState });
+  } catch (error) {
+    console.error('[legacyApp] Failed to boot AI panel', error);
+  }
 
-  bootDerivativeViz({ graphState: graphState });
-  bootRulesViz();
-  bootAiPanel({ aiState: aiState });
+  if (typeof window.katex !== 'undefined' && window.katex && typeof window.katex.render === 'function') {
+    document.querySelectorAll('.math-inline').forEach(function(el) {
+      window.katex.render(el.dataset.tex, el, { throwOnError: false, displayMode: false });
+    });
+    document.querySelectorAll('.math-display').forEach(function(el) {
+      window.katex.render(el.dataset.tex, el, { throwOnError: false, displayMode: true });
+    });
+  } else {
+    console.warn('[legacyApp] KaTeX not available; continuing without math rendering.');
+  }
+
+  try {
+    bootDerivativeViz({ graphState: graphState });
+  } catch (error) {
+    console.error('[legacyApp] Failed to boot derivative visualizations', error);
+  }
+
+  try {
+    bootRulesViz();
+  } catch (error) {
+    console.error('[legacyApp] Failed to boot rule visualizations', error);
+  }
+
+  try {
+    bootAdvancedViz();
+  } catch (error) {
+    console.error('[legacyApp] Failed to boot advanced visualizations', error);
+  }
 }
